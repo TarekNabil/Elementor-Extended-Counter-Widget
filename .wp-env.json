@@ -1,0 +1,18 @@
+{
+    "phpVersion": "8.0",
+    
+    "plugins": [ 
+        ".",
+        "https://downloads.wordpress.org/plugin/elementor.3.35.8.zip",
+        "https://downloads.wordpress.org/plugin/plugin-check.1.9.0.zip"
+         ],
+    "themes": [ "https://downloads.wordpress.org/theme/hello-elementor.3.4.7.zip" ],
+
+    "config": {
+        "JETPACK_AUTOLOAD_DEV": false,
+        "WP_DEBUG_LOG": true,
+        "SAVEQUERIES": true,
+        "WP_DEBUG_DISPLAY": true,
+        "ALTERNATE_WP_CRON": false   
+    }
+}
