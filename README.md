@@ -242,7 +242,7 @@ This plugin is licensed under the **GNU General Public License v3.0 (GPLv3+)**. 
 ## Author
 
 **Tarek Nabil**  
-[GitHub](https://github.com/TarekNabil) | [Portfolio](https://taeknabil.dev)
+[GitHub](https://github.com/TarekNabil) | [Portfolio](https://tareknabil.net)
 
 ---
 
