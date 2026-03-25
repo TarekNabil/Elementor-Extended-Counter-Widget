@@ -299,19 +299,96 @@ class Counter_Widget extends \Elementor\Widget_Base {
 	// -------------------------------------------------------------------------
 
 	/**
-	 * Render widget HTML on the frontend and in the editor preview.
+	 * Render widget HTML on the frontend and in the Elementor editor preview.
 	 *
-	 * Implemented in Phase 3. Outputs a placeholder div so the widget is
-	 * visible and selectable in the editor during Phase 1 testing.
+	 * Outputs the counter wrapper with data-* attributes consumed by
+	 * counter-animation.js and the initial display value as the zero equivalent
+	 * in the chosen numeral format.
+	 *
+	 * Phase 3.1
 	 *
 	 * @return void
 	 */
 	protected function render() {
-		// Phase 3 — full render implementation coming.
-		// Placeholder output keeps the widget visible in the editor preview.
-		echo '<div class="eecw-counter-placeholder" style="padding:20px;text-align:center;border:2px dashed #ccc;">';
-		echo '<span style="font-size:2rem;font-weight:bold;">0</span>';
-		echo '<p style="margin:4px 0 0;color:#999;font-size:12px;">' . esc_html__( 'Extended Counter (Phase 1)', 'elementor-extended-counter-widget' ) . '</p>';
-		echo '</div>';
+		$settings = $this->get_settings_for_display();
+
+		// Sanitize every setting defensively before use.
+		$target   = absint( $settings['number'] );
+		$format   = sanitize_key( $settings['number_format'] );
+		$duration = absint( $settings['duration'] );
+		$delay    = absint( $settings['delay'] );
+		$prefix   = sanitize_text_field( $settings['prefix'] );
+		$suffix   = sanitize_text_field( $settings['suffix'] );
+
+		// Convert the final target value so screen readers announce the right number.
+		$aria_label = sprintf(
+			/* translators: %s: final counter value */
+			_x( 'Counter: %s', 'aria-label', 'elementor-extended-counter-widget' ),
+			Number_Converter::convert( $target, $format )
+		);
+
+		// JS will animate from 0; give the element the zero equivalent in the
+		// chosen format as its initial visible text content.
+		$initial_display = Number_Converter::convert( 0, $format );
+
+		$this->add_render_attribute( 'counter_wrapper', [
+			'class'         => 'eecw-counter',
+			'data-target'   => $target,
+			'data-format'   => $format,
+			'data-duration' => $duration,
+			'data-delay'    => $delay,
+			'role'          => 'img',
+			'aria-label'    => $aria_label,
+		] );
+		?>
+		<div <?php $this->print_render_attribute_string( 'counter_wrapper' ); ?>>
+			<?php if ( '' !== $prefix ) : ?>
+				<span class="eecw-counter-prefix"><?php echo esc_html( $prefix ); ?></span>
+			<?php endif; ?>
+			<span class="eecw-counter-number" aria-hidden="true"><?php echo esc_html( $initial_display ); ?></span>
+			<?php if ( '' !== $suffix ) : ?>
+				<span class="eecw-counter-suffix"><?php echo esc_html( $suffix ); ?></span>
+			<?php endif; ?>
+		</div>
+		<?php
+	}
+
+	/**
+	 * Elementor live-preview template (Underscore.js / Backbone).
+	 *
+	 * Renders the same HTML structure as render() but driven by the settings
+	 * object injected by Elementor's editor so controls update without a
+	 * full page refresh.
+	 *
+	 * Phase 3.1
+	 *
+	 * @return void
+	 */
+	protected function _content_template() {
+		?>
+		<#
+		var target   = parseInt( settings.number, 10 ) || 0;
+		var format   = settings.number_format || 'latin';
+		var duration = parseInt( settings.duration, 10 ) || 2000;
+		var delay    = parseInt( settings.delay, 10 )    || 0;
+		var prefix   = settings.prefix;
+		var suffix   = settings.suffix;
+		#>
+		<div class="eecw-counter"
+			data-target="{{ target }}"
+			data-format="{{ format }}"
+			data-duration="{{ duration }}"
+			data-delay="{{ delay }}"
+			role="img"
+			aria-label="{{ target }}">
+			<# if ( prefix ) { #>
+				<span class="eecw-counter-prefix">{{ prefix }}</span>
+			<# } #>
+			<span class="eecw-counter-number" aria-hidden="true">{{ target }}</span>
+			<# if ( suffix ) { #>
+				<span class="eecw-counter-suffix">{{ suffix }}</span>
+			<# } #>
+		</div>
+		<?php
 	}
 }

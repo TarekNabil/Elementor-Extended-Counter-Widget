@@ -1,0 +1,95 @@
+/**
+ * EECW Counter Widget Styles
+ *
+ * Base layout for the counter wrapper, number, and prefix/suffix spans.
+ * Uses a mobile-first approach with breakpoint overrides for tablet and
+ * desktop. RTL direction is handled via [dir="rtl"] selectors so the
+ * widget mirrors correctly in Arabic/Persian/Hebrew layouts.
+ *
+ * Phase 3.3
+ *
+ * @package ElementorExtendedCounterWidget
+ */
+
+/* -------------------------------------------------------------------------
+   Counter wrapper
+   ------------------------------------------------------------------------- */
+
+.eecw-counter {
+	display: flex;
+	align-items: baseline;
+	justify-content: center;
+	flex-wrap: wrap;
+	gap: 0.125em;
+	text-align: center;
+	line-height: 1.2;
+}
+
+/* RTL: text alignment follows document direction */
+[dir="rtl"] .eecw-counter {
+	text-align: right;
+}
+
+/* -------------------------------------------------------------------------
+   Number display
+   ------------------------------------------------------------------------- */
+
+.eecw-counter-number {
+	display: inline-block;
+	font-size: 3rem;
+	font-weight: 700;
+	line-height: 1;
+	color: inherit;
+	/* Reserve width to reduce layout shifts while the number counts up */
+	min-width: 1ch;
+	letter-spacing: -0.02em;
+}
+
+/* -------------------------------------------------------------------------
+   Prefix / Suffix
+   ------------------------------------------------------------------------- */
+
+.eecw-counter-prefix,
+.eecw-counter-suffix {
+	display: inline-block;
+	font-size: 1.5rem;
+	font-weight: 400;
+	line-height: 1.2;
+	color: inherit;
+	vertical-align: baseline;
+}
+
+/* RTL: visually swap prefix and suffix by reversing the flex row */
+[dir="rtl"] .eecw-counter {
+	flex-direction: row-reverse;
+}
+
+/* -------------------------------------------------------------------------
+   Responsive — Tablet (≤ 1024 px)
+   ------------------------------------------------------------------------- */
+
+@media ( max-width: 1024px ) {
+	.eecw-counter-number {
+		font-size: 2.5rem;
+	}
+
+	.eecw-counter-prefix,
+	.eecw-counter-suffix {
+		font-size: 1.25rem;
+	}
+}
+
+/* -------------------------------------------------------------------------
+   Responsive — Mobile (≤ 767 px)
+   ------------------------------------------------------------------------- */
+
+@media ( max-width: 767px ) {
+	.eecw-counter-number {
+		font-size: 2rem;
+	}
+
+	.eecw-counter-prefix,
+	.eecw-counter-suffix {
+		font-size: 1rem;
+	}
+}
